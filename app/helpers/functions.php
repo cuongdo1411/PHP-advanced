@@ -2,5 +2,4 @@
     function toSlug($str){
         return $str;
     }
-
 ?>

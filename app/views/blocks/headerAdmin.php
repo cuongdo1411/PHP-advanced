@@ -1,0 +1,1 @@
+<h1 class="text-center">Xin chào <?php echo (!empty($username_admin)) ? $username_admin : ''; ?></h1>

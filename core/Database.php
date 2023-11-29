@@ -24,9 +24,7 @@ class Database{
             $valueStr = rtrim($valueStr,','); // Sử dụng rtrim để loại bỏ ký tự cuối cùng bên tay phải. Cụ thể ở đây là ký tự ','
 
             $sql = "INSERT INTO $table($fieldStr) VALUES ($valueStr)"; // Viết câu lệnh SQL.
-
             echo $sql;
-
             $status = $this->query($sql); // Gọi đến hàm query.
             if($status)
             {
@@ -83,8 +81,6 @@ class Database{
         {
             $sql = "DELETE FROM $table";
         }
-
-        echo $sql;
 
         $status = $this->query($sql);
 

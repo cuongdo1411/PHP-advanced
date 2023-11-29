@@ -1,12 +1,16 @@
 <?php
-class AuthMiddleware extends Middlewares{
-    public function handle(){
+class AuthMiddleware extends Middlewares
+{
 
-        $homeModel = Load::model('HomeModel');
+    protected $_authModel;
 
-        if(Session::data('admin_login') == null){
-            $response = new Response();
-            // $response->redirect('trang-chu');
+    public function handle()
+    {
+        $this->_authModel = Load::model('AuthModel');
+        // Redirect Admin
+        if (empty(Session::data("userId"))) {
+            $response = new Response;
+            $response->redirect('authentication/login');
         }
     }
 }

@@ -8,6 +8,7 @@ trait QueryBuilder
     public $selectField = '*';
     public $limit = '';
     public $orderBy = '';
+    public $groupBy = '';
     public $innerJoin = '';
 
     // Bảng trong CSDL
@@ -55,7 +56,7 @@ trait QueryBuilder
         {
             $this->operator = ' AND'; // Thì operator được gán giá trị là AND
         }
-        $this->where .= "$this->operator $field LIKE '$value'";
+        $this->where .= "$this->operator $field LIKE '%$value%'";
         return $this;
     }
 
@@ -87,6 +88,13 @@ trait QueryBuilder
         } else {
             $this->orderBy = "ORDER BY " . $field . " " . $type;
         }
+        return $this;
+    }
+
+    // Group By
+    public function groupBy($field)
+    {
+        $this->groupBy = " GROUP BY ".$field;
         return $this;
     }
 
@@ -136,10 +144,9 @@ trait QueryBuilder
     // Hàm lấy 
     public function get()
     {
-        $sqlQuery = "SELECT $this->selectField FROM $this->tableName $this->where $this->orderBy $this->limit";
+        $sqlQuery = "SELECT $this->selectField FROM $this->tableName $this->innerJoin $this->where $this->orderBy $this->limit $this->groupBy";
         $sqlQuery = trim($sqlQuery);
         $query = $this->query($sqlQuery);
-        
         // Reset field
         $this->resetQuery();
 
@@ -152,7 +159,7 @@ trait QueryBuilder
 
     public function first()
     {
-        $sqlQuery = "SELECT $this->selectField FROM $this->tableName $this->where $this->orderBy $this->limit";
+        $sqlQuery = "SELECT $this->selectField FROM $this->tableName $this->innerJoin $this->where $this->orderBy $this->limit $this->groupBy";
         $sqlQuery = trim($sqlQuery);
         $query = $this->query($sqlQuery);
 
@@ -174,6 +181,7 @@ trait QueryBuilder
         $this->selectField = '*';
         $this->limit = '';
         $this->orderBy = '';
+        $this->groupBy = '';
         $this->innerJoin = '';
     }
 }

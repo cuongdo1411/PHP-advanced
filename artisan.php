@@ -19,7 +19,7 @@ if (!empty($_SERVER['argv'][0])) {
                 file_put_contents('app/controllers/' . $controllerName . '.php', $data);
                 echo "\033[32m Tạo controller ' . $controllerName . ' thành công \033[0m\n";
             } else {
-                echo '\033[33m Controller ' . $controller . ' đã tồn tại. \033[0m\n';
+                echo "\033[33m Controller ' . $controller . ' đã tồn tại. \033[0m\n";
             }
         }
     }
@@ -35,7 +35,7 @@ if (!empty($_SERVER['argv'][0])) {
                 unlink('app/controllers/' . $nameController . '.php');
                 echo "\033[31m Xóa Controller ' . $nameController . ' thành công \033[0m\n";
             } else {
-                echo "Controller ' . $nameController . ' không tồn tại.";
+                echo "\033[31m Controller ' . $nameController . ' không tồn tại. \033[0m\n";
             }
         }
     }

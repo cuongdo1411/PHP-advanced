@@ -58,6 +58,11 @@ class Request
                         $dataFields[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
                     }
                 }
+                if (!empty($_FILES)) {
+                    foreach ($_FILES as $key => $value) {
+                        $dataFields[$key] = $value;
+                    }
+                }
             }
         }
 
@@ -72,6 +77,12 @@ class Request
                     } else {
                         $dataFields[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
                     }
+                }
+            }
+
+            if (!empty($_FILES)) {
+                foreach ($_FILES as $key => $value) {
+                    $dataFields[$key] = $value;
                 }
             }
         }
@@ -108,10 +119,6 @@ class Request
 
             $dataFields = $this->getFields();  // Biến dataFields sẽ chứa mảng giá trị của user.
 
-            // echo '<pre>';
-            // print_r($dataFields);
-            // echo '</pre>';
-
             foreach ($this->__rules as $fieldName => $ruleItem) {
 
                 $ruleItemArr = explode('|', $ruleItem); // explode() dùng để tách chuỗi thành mảng.
@@ -131,9 +138,54 @@ class Request
 
                     // Check từng điều kiện rules
                     if ($ruleName == 'required') {
-                        if (empty(trim($dataFields[$fieldName]))) { // trim dùng để cắt bỏ khoảng trống của chuỗi nếu có
-                            $this->set_Errors($fieldName, $ruleName); // 
+                        if (empty(trim($dataFields[$fieldName])) && $dataFields[$fieldName] !== '0') { // trim dùng để cắt bỏ khoảng trống của chuỗi nếu có
+                            $this->set_Errors($fieldName, $ruleName);
                             $checkValidate = false;
+                        }
+                    }
+
+                    if ($ruleName == 'imgRequired') {
+                        if (is_array($dataFields[$fieldName])) {
+                            if ($dataFields[$fieldName]['error'][0] == 4) {
+                                $this->set_Errors($fieldName, $ruleName);
+                                $checkValidate = false;
+                            }
+                        }
+                    }
+
+                    if ($ruleName == 'imgName') {
+                        if (is_array($dataFields[$fieldName])) {
+                            foreach ($dataFields[$fieldName]['name'] as $name) {
+                                if (file_exists(_DIR_ROOT_ . "/public/assets/admin/images/$name")) {
+                                    $this->set_Errors($fieldName, $ruleName);
+                                    $checkValidate = false;
+                                }
+                            }
+                        }
+                    }
+
+                    if ($ruleName == 'imgType') {
+                        if (is_array($dataFields[$fieldName])) {
+                            $validImageExtension = ['jpg', 'jpeg', 'png'];
+                            foreach ($dataFields[$fieldName]['name'] as $name) {
+                                $imageExtension = pathinfo($name, PATHINFO_EXTENSION);
+                                $imageExtension = strtolower($imageExtension);
+                                if (!in_array($imageExtension, $validImageExtension)) {
+                                    $this->set_Errors($fieldName, $ruleName);
+                                    $checkValidate = false;
+                                }
+                            }
+                        }
+                    }
+
+                    if ($ruleName == 'imgSize') {
+                        if (is_array($dataFields[$fieldName])) {
+                            foreach ($dataFields[$fieldName]['size'] as $size) {
+                                if ($size > 1000000) {
+                                    $this->set_Errors($fieldName, $ruleName);
+                                    $checkValidate = false;
+                                }
+                            }
                         }
                     }
 
@@ -147,6 +199,21 @@ class Request
                     if ($ruleName == 'max') {
 
                         if (strlen(trim($dataFields[$fieldName])) > $ruleValue) { // dùng strlen để trả về độ dài ký tự của chuỗi.
+                            $this->set_Errors($fieldName, $ruleName);
+                            $checkValidate = false;
+                        }
+                    }
+
+                    if ($ruleName == 'number') {
+                        $value = intval($dataFields[$fieldName]);
+                        if ($value < 0) {
+                            $this->set_Errors($fieldName, $ruleName);
+                            $checkValidate = false;
+                        }
+                    }
+
+                    if ($ruleName == 'phoneNumber') {
+                        if (!preg_match('/^(0|\+84)(3[2-9]|5[689]|7[06-9]|8[1-9]|9[0-9])\d{7}$/', $dataFields[$fieldName])) {
                             $this->set_Errors($fieldName, $ruleName);
                             $checkValidate = false;
                         }
@@ -178,7 +245,6 @@ class Request
                         }
 
                         if (!empty($tableName) && !empty($fieldCheck)) {
-                            // SELECT count(*) FROM $tableName WHERE $fieldCheck ='$dataFields[$fieldName]' là câu lệnh truy vấn lấy giá trị là số đếm, đếm xem trong CSDL có bao nhiêu giá trị thỏa điều kiện WHERE.
                             $checkExist = $this->db->query("SELECT $fieldCheck FROM $tableName WHERE $fieldCheck ='$dataFields[$fieldName]'")->rowCount();
                             if (!empty($checkExist)) {
                                 $this->set_Errors($fieldName, $ruleName);
@@ -207,8 +273,9 @@ class Request
         }
 
         $sessionKey = Session::isInvalid(); // 'unicode_session'
-        Session::flash($sessionKey.'_errors', $this->errors()); // set gia tri errors vao $key unicode_session_errors
-        Session::flash($sessionKey.'_old', $this->getFields()); // set gia tri errors vao $key unicode_session_errors
+    
+        Session::flash($sessionKey . '_errors', $this->errors()); // set gia tri errors vao $key unicode_session_errors
+        Session::flash($sessionKey . '_old', $this->getFields()); // set gia tri errors vao $key unicode_session_old
 
         return $checkValidate;
     }

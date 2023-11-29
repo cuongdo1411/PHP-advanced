@@ -8,7 +8,8 @@ class Session
      * data(key) => get session
      */
     // Hàm này sẽ có nhiệm vụ là SET SESSION và GET SESSION
-    // SET SESSION trong trường hợp
+    // SET SESSION: truyền 2 biến
+    // GET SESSION: truyền 1 biến
     static public function data($key = '', $value = '') // 'username', 'Cuong'
     {
         $sessionKey = self::isInvalid(); // Gọi hàm isInvalid
@@ -19,7 +20,7 @@ class Session
                 return true;
             }
             return false;
-        } else { // Xử lý trường hợp nếu không nhập $key (tức là mình sẽ lấy session)
+        } else { // Xử lý trường hợp nếu không nhập $key 
             if (empty($key)) { // Trường hợp nếu $key rỗng
                 if (isset($_SESSION[$sessionKey])) {
                     return $_SESSION[$sessionKey]; // Lấy nguyên mảng session

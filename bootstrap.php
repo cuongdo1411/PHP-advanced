@@ -14,7 +14,7 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') { // Nếu trên tr�
 // Dòng dưới là để xử lý đường dẫn _DIR_ROOT 
 // Bạn thấy đường dẫn đang sử dụng dấu \, nên chúng ta phải xử lý bằng hàm str_replace
 $a = str_replace('\\', '/', _DIR_ROOT); // Hàm str_replace được sử dụng để thay thế các chuỗi con trong một chuỗi, gồm 3 tham số (find, replace, string)
-
+define('_DIR_ROOT_', $a);
 // Dòng dưới là lấy đường dẫn chứa thư mục của project mà chúng ta đang thực hiện
 $folder = str_replace($_SERVER['DOCUMENT_ROOT'], "", $a); // Kết quả trả ra sẽ là: /PHP/mvc_trainning
 

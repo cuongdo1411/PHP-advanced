@@ -1,0 +1,1 @@
+Cảm ơn anh chị đã đặt hàng.

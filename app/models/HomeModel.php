@@ -28,6 +28,8 @@ class HomeModel extends Model
 
     public function getBrandData()
     {
-        return  $this->db->table('brand')->get();
+        return $this->db->table('brand')->get();
     }
+
+    
 }

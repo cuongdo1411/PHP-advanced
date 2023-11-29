@@ -26,14 +26,6 @@ class Controller
 
         extract($data); // Hàm extract sẽ biến những $key trong mảng thành những biến riêng biệt chứa giá trị có sẵn.
 
-        // ob_start(); // output buffering start: bắt đầu tiến hành lưu trữ vào bộ nhớ đệm.
-        // // Truy xuất đường dẫn chứa giá trị $view
-        // if (file_exists(_DIR_ROOT . '/app/views/' . $view . '.php')) {
-        //     require_once _DIR_ROOT . '/app/views/' . $view . '.php';
-        // }
-        // $contentView = ob_get_contents(); // Output buffering get contents: truyền những nội dung đã lưu trữ vào biến $contentView
-        // ob_end_clean(); // output buffering clean: xóa nội dung lưu trữ trong bộ nhớ đệm đầu ra mà không gửi đi.
-
         if (preg_match('~^layouts~', $view)) {
             if (file_exists(_DIR_ROOT . '/app/views/' . $view . '.php')) {
                 require_once _DIR_ROOT . '/app/views/' . $view . '.php';
@@ -46,6 +38,5 @@ class Controller
             $template = new Template();
             $template->run($contentView, $data);
         }
-        // echo $contentView;
     }
 }

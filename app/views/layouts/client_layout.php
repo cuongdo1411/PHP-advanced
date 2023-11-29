@@ -16,7 +16,7 @@
         <?php
         $this->render('blocks/header');
 
-        if (!empty($content) && !empty($sub_content)) {
+        if (isset($content) && isset($sub_content)) {
             $this->render($content, $sub_content); // content: products/detail, sub_content: [info, title]
         }
 
@@ -24,7 +24,7 @@
         ?>
     </div>
 
-    <script type="text/javascript" src="<?php echo WEB_ROOT; ?>/public/assets/js/script.js"></script>
+    <script type="text/javascript" src="<?php echo WEB_ROOT; ?>/public/assets/clients/js/script.js"></script>
 </body>
 
 </html>

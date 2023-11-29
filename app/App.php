@@ -200,7 +200,7 @@ class App
     {
         global $config;
         if (!empty($config['app']['boot'])) {
-            $appServiceProviderArr = $config['app']['boot'];
+            $appServiceProviderArr = $config['app']['boot']; // AppServiceProvider
             if (!empty($appServiceProviderArr)) {
                 foreach ($appServiceProviderArr as $appServiceProviderItem) {
                     if(file_exists('app/core/'.$appServiceProviderItem.'.php')){
